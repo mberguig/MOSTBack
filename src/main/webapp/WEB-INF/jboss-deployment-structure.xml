@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+	<deployment>
+		<exclude-subsystems>
+			<subsystem name="jpa" />
+			<subsystem name="webservices"/>
+		</exclude-subsystems>
+		<exclusions>
+			<module name="javaee.api" />
+			<module name="javax.persistence.api" />
+			<module name="javax.validation.api"/>
+			<module name="org.hibernate" />
+			<module name="org.apache.cxf" />
+			<module name="org.apache.cxf.impl" />
+			<module name="org.apache.neethi" />
+		</exclusions>
+		<dependencies>
+			<module name="javax.servlet.api" />
+			<module name="javax.servlet.jsp.api" />
+			<module name="javax.xml.bind.api" />
+			<module name="javax.xml.ws.api" />
+			<module name="javax.jws.api" />
+			<module name="javax.annotation.api" />
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure>

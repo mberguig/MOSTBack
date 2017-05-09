@@ -1,0 +1,14 @@
+debug: false
+
+server:
+  servletPath: /*
+  
+management:
+  context-path: /monitor
+
+---
+spring:
+  profiles: default
+  
+  resources:
+    cachePeriod: -1

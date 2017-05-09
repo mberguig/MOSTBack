@@ -5,76 +5,125 @@
     <groupId>fr.boursorama.most</groupId>
     <artifactId>most</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
-    <name>Spring Boot Blank Project (from https://github.com/making/spring-boot-blank)</name>
+    <name>most</name>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.2.7.RELEASE</version>
-    </parent>
+	<properties>
+		<java.version>7</java.version>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<spring-boot.version>1.4.4.RELEASE</spring-boot.version>
+		<springfox.version>2.5.0</springfox.version>
+	</properties>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>fr.boursorama.most.App</start-class>
-        <java.version>1.8</java.version>
-        <lombok.version>1.14.8</lombok.version>
-        <log4jdbc.log4j2.version>1.16</log4jdbc.log4j2.version>
-        <rest.assured.version>2.3.3</rest.assured.version>
-    </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bgee.log4jdbc-log4j2</groupId>
-            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
-            <version>${log4jdbc.log4j2.version}</version>
-        </dependency>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.restassured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${rest.assured.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>springloaded</artifactId>
-                        <version>${spring-loaded.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
+	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<!-- Ensure the embedded Tomcat don't interfere with servlet container -->
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!-- Configures some properties to be more nice for development -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>spring-mock-mvc</artifactId>
+			<version>2.9.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>most</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
 
 </project>
