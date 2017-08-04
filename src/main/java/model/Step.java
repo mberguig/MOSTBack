@@ -20,9 +20,31 @@ public class Step {
 	public int treatErrCount;
 	public int treatFailedCount;
 	public int nbExecution = 1;
+	public String totalDurationTxt;
+	public String averageDurationTxt;
 	
 	
 	public Step(){
+	}
+
+
+	public String getTotalDurationTxt() {
+		return totalDurationTxt;
+	}
+
+
+	public void setTotalDurationTxt(String totalDurationTxt) {
+		this.totalDurationTxt = totalDurationTxt;
+	}
+
+
+	public String getAverageDurationTxt() {
+		return averageDurationTxt;
+	}
+
+
+	public void setAverageDurationTxt(String averageDurationTxt) {
+		this.averageDurationTxt = averageDurationTxt;
 	}
 
 
@@ -85,6 +107,17 @@ public class Step {
 	public Date getStartTime() {
 		return startTime;
 	}
+
+	@Override
+	public String toString() {
+		return "Step [stepExecutionId=" + stepExecutionId + ", stepName=" + stepName + ", unitId=" + unitId
+				+ ", unitName=" + unitName + ", startTime=" + startTime + ", endTime=" + endTime + ", totalDuration="
+				+ totalDuration + ", averageDuration=" + averageDuration + ", stepOrder=" + stepOrder + ", status="
+				+ status + ", treatSuccessCount=" + treatSuccessCount + ", treatErrCount=" + treatErrCount
+				+ ", treatFailedCount=" + treatFailedCount + ", nbExecution=" + nbExecution + ", totalDurationTxt="
+				+ totalDurationTxt + ", averageDurationTxt=" + averageDurationTxt + "]";
+	}
+
 
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
@@ -157,6 +190,13 @@ public class Step {
 	}
 	public void addNbExecution(int nbExecution) {
 		this.nbExecution += nbExecution;
+	}
+
+	public void setStartTimeLong(long startTime) {
+		this.startTime = new Date(startTime);
+	}
+	public void setEndTimeLong(long endTime) {
+		this.endTime = new Date(endTime);
 	}
 
 }

@@ -5,73 +5,73 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import model.Batch;
-import model.Step;
-import model.TreatmentUnit;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
+import model.Step;
 
 public class GetSteps {
 
 	public GetSteps(){
-		super();
 	}
 
-	public static List<Step> Request() throws IOException  {
-		HashMap<String, Step> stepsStarted = ElasticRequests.getStartedSteps();
-		HashMap<String, Step> stepsFinished = ElasticRequests.getFinishedSteps();
-		List<Step> stepsList = new ArrayList<Step>();
-
-		for (String stepId : stepsStarted.keySet()) {
-			if(stepsFinished.containsKey(stepId)){
-				Step step = stepsStarted.get(stepId);
-				Step stepEnd = stepsFinished.get(stepId);
-				step = setDataToStep(step, stepEnd);
-				stepsList.add(step);
-			}else {
-				System.out.println(stepId + " non terminé");
-				stepsList.add(stepsStarted.get(stepId));
+	public static HashMap<String, Step> getStepsByName(HashMap<String, Step> stepsStarted, HashMap<String, Step> stepsFinished) 
+			throws JsonProcessingException, IOException {
+		HashMap<String, Step> stepsMap = new HashMap<String, Step>();
+		for(String stepId : stepsStarted.keySet()){
+			Step stepStart = stepsStarted.get(stepId);
+			String stepName = stepStart.getstepName();
+			if(stepsMap.containsKey(stepName)){     //1 étape a déjà le même nom
+				Step stepMap = stepsMap.get(stepName);
+				if(stepsFinished.containsKey(stepId)){
+					Step stepEnd = stepsFinished.get(stepId);				
+					setDataToStep(stepMap, stepStart, stepEnd);
+				}else {                  //etape non terminée
+					stepMap.addNbExecution(1);
+					stepMap.setStatus("EC");
+				}
+			}else { //si l'étape n'existe pas avant
+				if(stepsFinished.containsKey(stepId)){
+					Step stepEnd = stepsFinished.get(stepId);
+					long duration = stepEnd.getEndTime().getTime() - stepStart.getStartTime().getTime();
+					stepEnd.setTotalDuration(duration);
+					stepEnd.setAverageDuration(duration);
+					stepEnd.setAverageDurationTxt(GetBatchs.durationToString(duration));
+					stepEnd.setTotalDurationTxt(GetBatchs.durationToString(duration));		
+					stepsMap.put(stepName, stepEnd);										
+				} else{  //non terminée
+					stepStart.setStatus("EC");
+					stepsMap.put(stepName, stepStart);
+				}
 			}
 		}
-
-		return stepsList;
+		return stepsMap;
 	}
 
-	public static HashMap<String, Step> groupByStepName(List<Step> stepsList) throws IOException {
-		HashMap<String, Step> stepsByName = new HashMap<String, Step>();
 
-		for (Step step : stepsList) {			
-			if(stepsByName.containsKey(step.getstepName())){ //si l'étape existe déjà				
-				Step stepTmp = stepsByName.get(step.getstepName());
-				updateStep(step, stepTmp);
-				recalculateTimes(step, stepTmp);
-			}else {
-				stepsByName.put(step.getstepName(), step);	
-			}
-		}	
-
-		return stepsByName;
+	public static void setDataToStep(Step stepMap, Step stepStart, Step stepEnd){
+		stepMap.addNbExecution(1);
+		long duration = stepEnd.getEndTime().getTime() - stepStart.getStartTime().getTime();
+		stepMap.addTotalDuration(duration);
+		stepMap.setAverageDuration(stepMap.getTotalDuration()/stepMap.getNbExecution());
+		stepMap.setTotalDurationTxt(GetBatchs.durationToString(stepMap.getTotalDuration()));
+		stepMap.setAverageDurationTxt(GetBatchs.durationToString(stepMap.getAverageDuration()));
+		stepMap.addTreatErrCount(stepEnd.getTreatErrCount());
+		stepMap.addTreatFailedCount(stepEnd.getTreatFailedCount());
+		stepMap.addTreatSuccessCount(stepEnd.getTreatSuccessCount());		
+		switch(stepMap.getStatus()){
+		case "OK" : if(stepEnd.getStatus().equals("KOF") || stepEnd.getStatus().equals("KOT")) {
+			stepMap.setStatus(stepEnd.getStatus());
+		}
+		break;
+		case "KOF" : if(stepEnd.getStatus().equals("KOT")){
+			stepMap.setStatus(stepEnd.getStatus());
+		}
+		break;
+		}
+		return;
 	}
 
-	public static Step setDataToStep(Step step, Step stepEnd){
-		step.setStatus(stepEnd.getStatus());
-		step.setEndTime(stepEnd.getEndTime());
-		step.setTreatSuccessCount(stepEnd.getTreatSuccessCount());
-		step.setTreatFailedCount(stepEnd.getTreatFailedCount());
-		step.setTreatErrCount(stepEnd.getTreatErrCount());
-		step.setTotalDuration(step.getEndTime().getTime()-step.getStartTime().getTime());
-		return step;
-	}
-
-	public static Step updateStep(Step step, Step stepTmp){
-		stepTmp.addNbExecution(1);
-		stepTmp.addTreatErrCount(step.getTreatErrCount());
-		stepTmp.addTreatFailedCount(step.getTreatFailedCount());
-		stepTmp.addTreatSuccessCount(step.getTreatSuccessCount());
-		stepTmp.addTotalDuration(step.getTotalDuration());
-		stepTmp.setAverageDuration(stepTmp.getTotalDuration()/stepTmp.getNbExecution());
-		recalculateTimes(step, stepTmp);
-		return stepTmp;
-	}
+	
 
 	public static void recalculateTimes(Step step, Step stepTmp){		
 		if (step.getStartTime().getTime() < stepTmp.getStartTime().getTime()){

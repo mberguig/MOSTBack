@@ -1,56 +1,68 @@
 package model;
 
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+
 
 public class Batch {
-	String id;
-	String name;
+	String treatmentId;
+	String treatmentName;
 	Date startTime;
 	Date endTime;
 	long duration;
+	String durationTxt;
 	String status;
 	boolean referenced;
-	public List<TreatmentUnit> treatmentUnits = new ArrayList<TreatmentUnit>();
+	public HashMap<String, TreatmentUnit> treatmentUnits = new HashMap<String, TreatmentUnit>();
 	
-	public Batch(String id, String name, Date startTime, Date endTime, long duration, String status, boolean referenced, List<TreatmentUnit> treatmentUnits){
+	public Batch(String treatmentId, String treatmentName, Date startTime, Date endTime, long duration, String durationTxt, String status, boolean referenced, HashMap<String, TreatmentUnit> treatmentUnits){
 		
-		this.id = id;
-		this.name = name;
+		this.treatmentId = treatmentId;
+		this.treatmentName = treatmentName;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.duration = duration;
 		this.status = status;
 		this.referenced = referenced;
 		this.treatmentUnits = treatmentUnits;
+		this.durationTxt = durationTxt;
+	}
+
+	public String getDurationTxt() {
+		return durationTxt;
+	}
+
+	public void setDurationTxt(String durationTxt) {
+		this.durationTxt = durationTxt;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
 	}
 
 	public Batch() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<TreatmentUnit> addTreatmentUnit(TreatmentUnit treatmentUnit){
-		treatmentUnits.add(treatmentUnit);
+	public HashMap<String, TreatmentUnit> addTreatmentUnit(String id, TreatmentUnit treatmentUnit){
+		treatmentUnits.put(id, treatmentUnit);
 		return treatmentUnits;
 	}
 	
-	public String getId() {
-		return id;
+	public String getTreatmentId() {
+		return treatmentId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setTreatmentId(String id) {
+		this.treatmentId = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getTreatmentName() {
+		return treatmentName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTreatmentName(String name) {
+		this.treatmentName = name;
 	}
 
 	public Date getStartTime() {
@@ -69,14 +81,6 @@ public class Batch {
 		this.endTime = endTime;
 	}
 
-	public long getDuration() {
-		return duration;
-	}
-
-	public void setDuration(long duration) {
-		this.duration = duration;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -93,34 +97,25 @@ public class Batch {
 		this.referenced = referenced;
 	}
 
-	public List<TreatmentUnit> getTreatmentUnits() {
+	public HashMap<String, TreatmentUnit> getTreatmentUnits() {
 		return treatmentUnits;
 	}
 
-	public void setTreatmentUnits(List<TreatmentUnit> treatmentUnits) {
+	public void setTreatmentUnits(HashMap<String, TreatmentUnit> treatmentUnits) {
 		this.treatmentUnits = treatmentUnits;
 	}
 	
-
-
-	public void setTreatmentUnits(int index, TreatmentUnit treatmentUnits) {
-		this.treatmentUnits.set(index, treatmentUnits);
-	}
-	
-
 	public String toString(){
-		String dataBatch = "id : " + this.id + " name : " + this.name + " startTime : " + this.startTime + " endTime : " + this.endTime + " duration : " + this.duration + " status : " + this.status + " referenced : " + this.referenced;
+		String dataBatch = "id : " + this.treatmentId + " name : " + this.treatmentName + " startTime : " + this.startTime + " endTime : " + this.endTime + " duration : " + this.duration + " status : " + this.status + " referenced : " + this.referenced;
 		String dataUnit = "";
-		if(this.treatmentUnits != null){
-		for (TreatmentUnit unit : this.treatmentUnits){
-			if(unit != null){
-				dataUnit += unit.toString();
-			}
-		}
-		}
 		dataBatch = dataBatch + " " + dataUnit;
 		return dataBatch;
 	}
-	
-	
+
+	public long getDuration() {
+		return duration;
+	}
+
+
+
 }

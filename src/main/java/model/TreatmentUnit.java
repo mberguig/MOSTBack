@@ -13,13 +13,19 @@ public class TreatmentUnit {
 	Date startTime;
 	Date endTime;
 	long duration;
+	String durationTxt;
 	String status;
 	int treatSuccessCount;
 	int treatErrCount;
 	int treatFailedCount;
+	Boolean referenced = false;
 	List<Step> steps = new ArrayList<Step>();
 	
-	public TreatmentUnit(String unitId, String unitName, String treatmentId,String treatmentName, Date startTime, Date endTime, long duration, int stepOrder, String status, int treatSuccessCount, int treatErrCount, int treatFailedCount, List<Step> steps) {
+	public TreatmentUnit() {
+
+	}
+
+	public TreatmentUnit(String unitId, String unitName, String treatmentId,String treatmentName, Date startTime, Date endTime, long duration, String durationTxt, int stepOrder, String status, int treatSuccessCount, int treatErrCount, int treatFailedCount, List<Step> steps) {
 		
 		this.unitId = unitId;
 		this.unitName = unitName;
@@ -28,6 +34,7 @@ public class TreatmentUnit {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.duration = duration;
+		this.durationTxt = durationTxt;
 		this.status = status;
 		this.treatSuccessCount = treatSuccessCount;
 		this.treatErrCount = treatErrCount;
@@ -35,6 +42,42 @@ public class TreatmentUnit {
 		this.steps = steps;
 	}
 	
+	public String getDurationTxt() {
+		return durationTxt;
+	}
+
+	public void setDurationTxt(String durationTxt) {
+		this.durationTxt = durationTxt;
+	}
+
+	public int getTreatSuccessCount() {
+		return treatSuccessCount;
+	}
+
+	public void setTreatSuccessCount(int treatSuccessCount) {
+		this.treatSuccessCount = treatSuccessCount;
+	}
+
+	public int getTreatErrCount() {
+		return treatErrCount;
+	}
+
+	public void setTreatErrCount(int treatErrCount) {
+		this.treatErrCount = treatErrCount;
+	}
+
+	public int getTreatFailedCount() {
+		return treatFailedCount;
+	}
+
+	public void setTreatFailedCount(int treatFailedCount) {
+		this.treatFailedCount = treatFailedCount;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
+	}
+
 	public String getTreatmentName() {
 		return treatmentName;
 	}
@@ -59,34 +102,7 @@ public class TreatmentUnit {
 		this.treatmentId = treatmentId;
 	}
 
-	public int gettreatSuccessCount() {
-		return treatSuccessCount;
-	}
 
-	public void settreatSuccessCount(int treatSuccessCount) {
-		this.treatSuccessCount = treatSuccessCount;
-	}
-
-	public int gettreatErrCount() {
-		return treatErrCount;
-	}
-
-	public void settreatErrCount(int treatErrCount) {
-		this.treatErrCount = treatErrCount;
-	}
-
-	public int gettreatFailedCount() {
-		return treatFailedCount;
-	}
-
-	public void settreatFailedCount(int treatFailedCount) {
-		this.treatFailedCount = treatFailedCount;
-	}
-
-	public TreatmentUnit() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 	public List<Step> addStep(Step step){
 		steps.add(step);
@@ -101,20 +117,15 @@ public class TreatmentUnit {
 		this.unitId = unitId;
 	}
 
-	public String getName() {
-		return unitName;
-	}
-
-	public void setName(String name) {
-		this.unitName = name;
-	}
-
 	public Date getStartTime() {
 		return startTime;
 	}
 
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
+	}
+	public void setStartTimeLong(long startTime) {
+		this.startTime = new Date(startTime);
 	}
 
 	public Date getEndTime() {
@@ -124,13 +135,8 @@ public class TreatmentUnit {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-
-	public long getDuration() {
-		return duration;
-	}
-
-	public void setDuration(long duration) {
-		this.duration = duration;
+	public void setEndTimeLong(long endTime) {
+		this.endTime = new Date(endTime);
 	}
 
 	public String getStatus() {
@@ -141,6 +147,10 @@ public class TreatmentUnit {
 		this.status = status;
 	}
 
+	public long getDuration() {
+		return duration;
+	}
+
 	public List<Step> getSteps() {
 		return steps;
 	}
@@ -149,10 +159,19 @@ public class TreatmentUnit {
 		this.steps = steps;
 	}
 	
+	@Override
 	public String toString(){
-		return "unitId : " + this.unitId + " unitName : " + this.unitName + " treatmentId : " + this.treatmentId + " treatmentName : " + this.treatmentName + " startTime : " + this.startTime;
+		return "unitId : " + this.unitId + " unitName : " + this.unitName + " treatmentId : " + this.treatmentId + " treatmentName : " + this.treatmentName + " startTime : " + this.startTime + " referenced : " + this.referenced;
 				
 	}
-	
-	
+
+	public Boolean getReferenced() {
+		return referenced;
+	}
+
+	public void setReferenced(Boolean referenced) {
+		this.referenced = referenced;
+	}
+
+
 }
